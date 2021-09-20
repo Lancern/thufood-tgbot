@@ -33,13 +33,15 @@ async fn run() {
                 .takes_value(true)
                 .help("path to a file that contains canteens list")
                 .required(true))
-            .arg(clap::Arg::with_name("token")
-                .short("t")
-                .long("token")
-                .takes_value(true)
-                .help("telegram bot API token")
-                .required(true))
             .get_matches();
+
+    let token = match std::env::var("TELEGRAM_TOKEN") {
+        Ok(token) => token,
+        Err(_) => {
+            log::error!("TELEGRAM_TOKEN not set");
+            std::process::exit(1);
+        }
+    };
 
     let canteens_path = PathBuf::from(String::from(args.value_of("canteens_list").unwrap()));
     let canteens = match crate::canteen::load_canteens_from_file(canteens_path) {
@@ -50,8 +52,6 @@ async fn run() {
         }
     };
     let canteen_picker = CanteenPicker::new(canteens);
-
-    let token = String::from(args.value_of("token").unwrap());
 
     let bot = Bot::new(token, canteen_picker);
     bot.run().await;
