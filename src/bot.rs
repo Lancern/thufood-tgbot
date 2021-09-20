@@ -13,13 +13,18 @@ use crate::canteen::CanteenPicker;
 /// `thufood` telegram bot.
 pub struct Bot {
     token: String,
+    name: String,
     picker: CanteenPicker,
 }
 
 impl Bot {
-    /// Create a new `Bot` object from the given Telegram bot API token and canteen picker.
-    pub fn new(token: String, picker: CanteenPicker) -> Self {
-        Self { token, picker }
+    /// Create a new `Bot` object from the given Telegram bot API token, bot name and canteen picker.
+    pub fn new(token: String, name: String, picker: CanteenPicker) -> Self {
+        Self {
+            token,
+            name,
+            picker,
+        }
     }
 
     /// Run the bot.
@@ -35,7 +40,7 @@ impl Bot {
         }
 
         let picker = Arc::new(self.picker);
-        teloxide::commands_repl(bot, "thufood", move |cx, cmd| {
+        teloxide::commands_repl(bot, self.name, move |cx, cmd| {
             Self::handle_message(cx, cmd, picker.clone())
         })
         .await;

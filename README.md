@@ -25,11 +25,14 @@ docker build .
 
 ```shell
 export TELEGRAM_TOKEN=$TOKEN
+export TELEGRAM_BOT_NAME=$NAME
 cargo run --release -- -c canteens.txt
 ```
 
 `$TOKEN` should be set to the Telegram API token allocated for the bot. To allocate a new token,
 talk to `BotFather`.
+
+`$NAME` should be set to the Telegram bot name.
 
 The `-c` command line option gives the path to a text file that contains the list of canteens. The
 [`canteens.txt`](./canteens.txt) file gives an example and the default configuration as to the 
@@ -41,10 +44,12 @@ weight of a canteen is, the more likely the canteen will be chosen.
 
 ```shell
 docker build .
-docker run -d --net host --env TELEGRAM_TOKEN=$TOKEN <image>
+docker run -d --net host --env TELEGRAM_TOKEN=$TOKEN --env TELEGRAM_BOT_NAME=$NAME <image>
 ```
 
 `$TOKEN` should be set to the Telegram API token allocated for the bot.
+
+`$NAME` should be set to the Telegram bot name.
 
 `<image>` is the identifier of the docker image produced by `docker build`.
 

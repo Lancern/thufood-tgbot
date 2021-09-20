@@ -37,13 +37,8 @@ async fn run() {
                 .required(true))
             .get_matches();
 
-    let token = match std::env::var("TELEGRAM_TOKEN") {
-        Ok(token) => token,
-        Err(_) => {
-            log::error!("TELEGRAM_TOKEN not set");
-            std::process::exit(1);
-        }
-    };
+    let token = get_env_var("TELEGRAM_TOKEN");
+    let bot_name = get_env_var("TELEGRAM_BOT_NAME");
 
     let canteens_path = PathBuf::from(String::from(args.value_of("canteens_list").unwrap()));
     let canteens = match crate::canteen::load_canteens_from_file(canteens_path) {
@@ -55,6 +50,20 @@ async fn run() {
     };
     let canteen_picker = CanteenPicker::new(canteens);
 
-    let bot = Bot::new(token, canteen_picker);
+    let bot = Bot::new(token, bot_name, canteen_picker);
     bot.run().await;
+}
+
+fn get_env_var<T>(name: T) -> String
+where
+    T: AsRef<str>
+{
+    let name = name.as_ref();
+    match std::env::var(name) {
+        Ok(value) => value,
+        Err(_) => {
+            log::error!("{} not set", name);
+            std::process::exit(1);
+        }
+    }
 }
