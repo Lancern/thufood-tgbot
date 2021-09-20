@@ -37,7 +37,7 @@ impl Bot {
         picker: Arc<CanteenPicker>
     ) -> Result<(), Box<dyn Error + Send + Sync>> {
         match cmd {
-            Command::Help => cx.answer(Command::descriptions()).await?,
+            Command::Start | Command::Help => cx.answer(Command::descriptions()).await?,
             Command::Canteen => {
                 let canteen = picker.pick();
                 cx.answer(canteen.name.clone()).await?
@@ -51,6 +51,9 @@ impl Bot {
 #[derive(BotCommand)]
 #[command(rename = "lowercase", description = "支持的命令：")]
 enum Command {
+    #[command(description = "开始交互并显示帮助信息")]
+    Start,
+
     #[command(description = "显示帮助信息")]
     Help,
 
