@@ -27,7 +27,12 @@ impl Bot {
         let bot = RawBot::new(self.token.clone()).auto_send();
 
         // Register all the commands provided by the bot.
-        bot.set_my_commands(ALL_COMMANDS.clone()).await;
+        match bot.set_my_commands(ALL_COMMANDS.clone()).await {
+            Ok(_) => (),
+            Err(e) => {
+                log::warn!("cannot set commands: {}", e);
+            }
+        }
 
         let picker = Arc::new(self.picker);
         teloxide::commands_repl(bot, "thufood", move |cx, cmd| {
