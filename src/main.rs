@@ -1,4 +1,6 @@
 extern crate clap;
+#[macro_use]
+extern crate lazy_static;
 extern crate log;
 extern crate pretty_env_logger;
 extern crate rand;

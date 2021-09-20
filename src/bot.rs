@@ -3,8 +3,8 @@ use std::sync::Arc;
 
 use teloxide::adaptors::AutoSend;
 use teloxide::dispatching::UpdateWithCx;
-use teloxide::requests::RequesterExt;
-use teloxide::types::Message;
+use teloxide::requests::{Requester, RequesterExt};
+use teloxide::types::{BotCommand as BotCommandDescriptor, Message};
 use teloxide::utils::command::BotCommand;
 use teloxide::Bot as RawBot;
 
@@ -25,16 +25,21 @@ impl Bot {
     /// Run the bot.
     pub async fn run(self) {
         let bot = RawBot::new(self.token.clone()).auto_send();
+
+        // Register all the commands provided by the bot.
+        bot.set_my_commands(ALL_COMMANDS.clone()).await;
+
         let picker = Arc::new(self.picker);
         teloxide::commands_repl(bot, "thufood", move |cx, cmd| {
             Self::handle_message(cx, cmd, picker.clone())
-        }).await;
+        })
+        .await;
     }
 
     async fn handle_message(
         cx: UpdateWithCx<AutoSend<RawBot>, Message>,
         cmd: Command,
-        picker: Arc<CanteenPicker>
+        picker: Arc<CanteenPicker>,
     ) -> Result<(), Box<dyn Error + Send + Sync>> {
         match cmd {
             Command::Start | Command::Help => cx.answer(Command::descriptions()).await?,
@@ -59,4 +64,21 @@ enum Command {
 
     #[command(description = "随机选择一个餐厅")]
     Canteen,
+}
+
+lazy_static! {
+    static ref ALL_COMMANDS: Vec<BotCommandDescriptor> = vec![
+        BotCommandDescriptor {
+            command: String::from("start"),
+            description: String::from("开始交互并显示帮助信息"),
+        },
+        BotCommandDescriptor {
+            command: String::from("help"),
+            description: String::from("显示帮助信息"),
+        },
+        BotCommandDescriptor {
+            command: String::from("canteen"),
+            description: String::from("随机选择一个餐厅"),
+        },
+    ];
 }
