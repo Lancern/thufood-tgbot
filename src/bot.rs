@@ -62,6 +62,12 @@ impl Bot {
             Command::Milktea => {
                 Self::give_drinks(cx, "奶茶", "🧋").await?;
             }
+            Command::Cappuccino => {
+                Self::give_drinks(cx, "卡布奇诺", "☕️").await?;
+            }
+            Command::ProduceDrink { drink_name } => {
+                Self::give_drinks(cx, &drink_name, "").await?;
+            }
         };
 
         Ok(())
@@ -127,6 +133,12 @@ enum Command {
 
     #[command(description = "线上喝奶茶")]
     Milktea,
+
+    #[command(description = "线上喝卡布奇诺")]
+    Cappuccino,
+
+    #[command(description = "线上生产饮品")]
+    ProduceDrink { drink_name: String },
 }
 
 lazy_static! {
@@ -147,5 +159,13 @@ lazy_static! {
             command: String::from("milktea"),
             description: String::from("线上喝奶茶"),
         },
+        BotCommandDescriptor {
+            command: String::from("cappuccino"),
+            description: String::from("线上喝卡布奇诺"),
+        },
+        BotCommandDescriptor {
+            command: String::from("producedrink"),
+            description: String::from("线上生产饮品"),
+        }
     ];
 }
