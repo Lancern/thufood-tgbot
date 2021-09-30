@@ -76,7 +76,8 @@ impl Bot {
             Some(user) => user,
             None => return Ok(()),
         };
-        let to = crate::utils::get_replied_message(&cx.update).and_then(crate::utils::get_message_sender);
+        let to = crate::utils::get_replied_message(&cx.update)
+            .and_then(crate::utils::get_message_sender);
         let response = Self::format_give_drink_message(from, to, drink_name, drink_emoji);
         cx.answer(response).await?;
         Ok(())
@@ -88,19 +89,27 @@ impl Bot {
         drink_name: &str,
         drink_emoji: &str,
     ) -> String {
-        let from_name = crate::utils::get_user_display_name(from);
-        let mut to_name = match to {
-            Some(user) => crate::utils::get_user_display_name(user),
-            None => String::from("自己"),
-        };
-        if from_name == to_name {
-            to_name = String::from("自己");
+        let mut to = to;
+        if let Some(u) = &to {
+            if from.id == u.id {
+                to = None;
+            }
         }
 
-        format!(
-            "{} 给 {} 倒了一杯{}！{}",
-            from_name, to_name, drink_name, drink_emoji
-        )
+        let from_name = crate::utils::get_user_display_name(from);
+
+        if let Some(u) = &to {
+            let to_name = crate::utils::get_user_display_name(u);
+            format!(
+                "{} 给 {} 倒了一杯{}！{}",
+                from_name, to_name, drink_name, drink_emoji
+            )
+        } else {
+            format!(
+                "{} 给自己倒了一杯{}！{}",
+                from_name, drink_name, drink_emoji
+            )
+        }
     }
 }
 
