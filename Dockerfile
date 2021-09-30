@@ -3,6 +3,4 @@ FROM rust
 WORKDIR /bot
 COPY . .
 
-RUN cargo build --release
-
-ENTRYPOINT cargo run --release -- -c canteens.txt
+ENTRYPOINT ["/bot/target/release/thufood-tgbot -c canteens.txt"]

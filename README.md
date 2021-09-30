@@ -13,7 +13,7 @@ Build the bot using `cargo`:
 cargo build --release
 ```
 
-You can also build a docker image:
+After building the bot, you can build a docker image:
 
 ```shell
 docker build .
@@ -35,14 +35,15 @@ talk to `BotFather`.
 `$NAME` should be set to the Telegram bot name.
 
 The `-c` command line option gives the path to a text file that contains the list of canteens. The
-[`canteens.txt`](./canteens.txt) file gives an example and the default configuration as to the 
-canteens list. Each line within the canteen list file is a two tuple `<name>,<weight>` where 
+[`canteens.txt`](./canteens.txt) file gives an example and the default configuration as to the
+canteens list. Each line within the canteen list file is a two tuple `<name>,<weight>` where
 `<name>` is the name of the canteen and `<weight>` is the "weight" of the canteen. The larger the
 weight of a canteen is, the more likely the canteen will be chosen.
 
 ### Run bot in a docker container
 
 ```shell
+cargo build --release
 docker build .
 docker run -d --net host --env TELEGRAM_TOKEN=$TOKEN --env TELEGRAM_BOT_NAME=$NAME <image>
 ```
