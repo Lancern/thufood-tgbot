@@ -4,7 +4,7 @@ use std::sync::Arc;
 use teloxide::adaptors::AutoSend;
 use teloxide::dispatching::UpdateWithCx;
 use teloxide::requests::{Requester, RequesterExt};
-use teloxide::types::{BotCommand as BotCommandDescriptor, Message};
+use teloxide::types::{BotCommand as BotCommandDescriptor, Message, MessageKind};
 use teloxide::utils::command::BotCommand;
 use teloxide::Bot as RawBot;
 
@@ -52,11 +52,22 @@ impl Bot {
         picker: Arc<CanteenPicker>,
     ) -> Result<(), Box<dyn Error + Send + Sync>> {
         match cmd {
-            Command::Start | Command::Help => cx.answer(Command::descriptions()).await?,
+            Command::Start | Command::Help => {
+                cx.answer(Command::descriptions()).await?;
+            },
             Command::Canteen => {
                 let canteen = picker.pick();
-                cx.answer(canteen.name.clone()).await?
-            }
+                cx.answer(canteen.name.clone()).await?;
+            },
+            Command::Milktea => {
+                let user = match &cx.update.kind {
+                    MessageKind::Common(msg) => msg.from.as_ref().and_then(|user| user.username.as_ref()),
+                    _ => None,
+                };
+                if let Some(user) = user {
+                    cx.answer(format!("给 @{} 倒一杯奶茶！🧋", user)).await?;
+                }
+            },
         };
 
         Ok(())
@@ -74,6 +85,9 @@ enum Command {
 
     #[command(description = "随机选择一个餐厅")]
     Canteen,
+
+    #[command(description = "线上喝奶茶")]
+    Milktea,
 }
 
 lazy_static! {
@@ -89,6 +103,10 @@ lazy_static! {
         BotCommandDescriptor {
             command: String::from("canteen"),
             description: String::from("随机选择一个餐厅"),
+        },
+        BotCommandDescriptor {
+            command: String::from("milktea"),
+            description: String::from("线上喝奶茶"),
         },
     ];
 }

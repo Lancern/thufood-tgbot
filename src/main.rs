@@ -29,12 +29,14 @@ async fn run() {
         clap::App::new("Telegram bot providing canteen recommendations in Tsinghua University")
             .version("0.1.0")
             .author("Sirui Mu <msrlancern@gmail.com>")
-            .arg(clap::Arg::with_name("canteens_list")
-                .short("c")
-                .long("canteens")
-                .takes_value(true)
-                .help("path to a file that contains canteens list")
-                .required(true))
+            .arg(
+                clap::Arg::with_name("canteens_list")
+                    .short("c")
+                    .long("canteens")
+                    .takes_value(true)
+                    .help("path to a file that contains canteens list")
+                    .required(true),
+            )
             .get_matches();
 
     let token = get_env_var("TELEGRAM_TOKEN");
@@ -56,7 +58,7 @@ async fn run() {
 
 fn get_env_var<T>(name: T) -> String
 where
-    T: AsRef<str>
+    T: AsRef<str>,
 {
     let name = name.as_ref();
     match std::env::var(name) {
