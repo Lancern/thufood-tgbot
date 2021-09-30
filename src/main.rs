@@ -11,6 +11,7 @@ extern crate toml;
 
 mod bot;
 mod canteen;
+mod utils;
 
 use std::path::PathBuf;
 

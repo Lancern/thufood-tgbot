@@ -4,7 +4,7 @@ use std::sync::Arc;
 use teloxide::adaptors::AutoSend;
 use teloxide::dispatching::UpdateWithCx;
 use teloxide::requests::{Requester, RequesterExt};
-use teloxide::types::{BotCommand as BotCommandDescriptor, Message, MessageKind};
+use teloxide::types::{BotCommand as BotCommandDescriptor, Message};
 use teloxide::utils::command::BotCommand;
 use teloxide::Bot as RawBot;
 
@@ -54,20 +54,18 @@ impl Bot {
         match cmd {
             Command::Start | Command::Help => {
                 cx.answer(Command::descriptions()).await?;
-            },
+            }
             Command::Canteen => {
                 let canteen = picker.pick();
                 cx.answer(canteen.name.clone()).await?;
-            },
+            }
             Command::Milktea => {
-                let user = match &cx.update.kind {
-                    MessageKind::Common(msg) => msg.from.as_ref().and_then(|user| user.username.as_ref()),
-                    _ => None,
-                };
-                if let Some(user) = user {
-                    cx.answer(format!("给 @{} 倒一杯奶茶！🧋", user)).await?;
+                if let Some(user) = crate::utils::get_message_sender(&cx.update) {
+                    let user_name = crate::utils::get_user_display_name(user);
+                    cx.answer(format!("给 @{} 倒一杯奶茶！🧋", user_name))
+                        .await?;
                 }
-            },
+            }
         };
 
         Ok(())
