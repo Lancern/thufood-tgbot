@@ -4,7 +4,7 @@ use std::sync::Arc;
 use teloxide::adaptors::AutoSend;
 use teloxide::dispatching::UpdateWithCx;
 use teloxide::requests::{Requester, RequesterExt};
-use teloxide::types::{BotCommand as BotCommandDescriptor, Message};
+use teloxide::types::{BotCommand as BotCommandDescriptor, Message, User};
 use teloxide::utils::command::BotCommand;
 use teloxide::Bot as RawBot;
 
@@ -28,7 +28,7 @@ impl Bot {
     }
 
     /// Run the bot.
-    pub async fn run(self) {
+    pub async fn run(self: Arc<Self>) {
         let bot = RawBot::new(self.token.clone()).auto_send();
 
         // Register all the commands provided by the bot.
@@ -39,51 +39,68 @@ impl Bot {
             }
         }
 
-        let picker = Arc::new(self.picker);
-        teloxide::commands_repl(bot, self.name, move |cx, cmd| {
-            Self::handle_message(cx, cmd, picker.clone())
+        let self_share = self.clone();
+        teloxide::commands_repl(bot, self.name.clone(), move |cx, cmd| {
+            Self::handle_message(self_share.clone(), cx, cmd)
         })
         .await;
     }
 
     async fn handle_message(
+        self: Arc<Self>,
         cx: UpdateWithCx<AutoSend<RawBot>, Message>,
         cmd: Command,
-        picker: Arc<CanteenPicker>,
     ) -> Result<(), Box<dyn Error + Send + Sync>> {
         match cmd {
             Command::Start | Command::Help => {
                 cx.answer(Command::descriptions()).await?;
             }
             Command::Canteen => {
-                let canteen = picker.pick();
+                let canteen = self.picker.pick();
                 cx.answer(canteen.name.clone()).await?;
             }
             Command::Milktea => {
-                if let Some(user) = crate::utils::get_message_sender(&cx.update) {
-                    let user_name = crate::utils::get_user_display_name(user);
-                    loop {
-                        if let Some(reply_msg) = crate::utils::get_replied_message(&cx.update) {
-                            if let Some(target_user) = crate::utils::get_message_sender(reply_msg) {
-                                let target_user_name =
-                                    crate::utils::get_user_display_name(target_user);
-                                cx.answer(format!(
-                                    "{} 给 {} 倒了一杯奶茶！🧋",
-                                    user_name, target_user_name
-                                ))
-                                .await?;
-                                break;
-                            }
-                        }
-                        cx.answer(format!("给 {} 倒一杯奶茶！🧋", user_name))
-                            .await?;
-                        break;
-                    }
-                }
+                Self::give_drinks(cx, "奶茶", "🧋").await?;
             }
         };
 
         Ok(())
+    }
+
+    async fn give_drinks(
+        cx: UpdateWithCx<AutoSend<RawBot>, Message>,
+        drink_name: &str,
+        drink_emoji: &str,
+    ) -> Result<(), Box<dyn Error + Send + Sync>> {
+        let from = match crate::utils::get_message_sender(&cx.update) {
+            Some(user) => user,
+            None => return Ok(()),
+        };
+        let to = crate::utils::get_replied_message(&cx.update).and_then(crate::utils::get_message_sender);
+        let response = Self::format_give_drink_message(from, to, drink_name, drink_emoji);
+        cx.answer(response).await?;
+        Ok(())
+    }
+
+    fn format_give_drink_message(
+        from: &User,
+        to: Option<&User>,
+        drink_name: &str,
+        drink_emoji: &str,
+    ) -> String {
+        let from_name = crate::utils::get_user_display_name(from);
+        let mut to_name = match to {
+            Some(user) => crate::utils::get_user_display_name(user),
+            None => String::from("自己"),
+        };
+        if from_name == to_name {
+            to_name = String::from("自己");
+        }
+
+        format!(
+            "{} 给 {} 倒了一杯{}！{}",
+            from_name, to_name, drink_name, drink_emoji
+        )
     }
 }
 

@@ -14,6 +14,7 @@ mod canteen;
 mod utils;
 
 use std::path::PathBuf;
+use std::sync::Arc;
 
 use crate::bot::Bot;
 use crate::canteen::CanteenPicker;
@@ -53,7 +54,7 @@ async fn run() {
     };
     let canteen_picker = CanteenPicker::new(canteens);
 
-    let bot = Bot::new(token, bot_name, canteen_picker);
+    let bot = Arc::new(Bot::new(token, bot_name, canteen_picker));
     bot.run().await;
 }
 
