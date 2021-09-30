@@ -62,8 +62,23 @@ impl Bot {
             Command::Milktea => {
                 if let Some(user) = crate::utils::get_message_sender(&cx.update) {
                     let user_name = crate::utils::get_user_display_name(user);
-                    cx.answer(format!("给 @{} 倒一杯奶茶！🧋", user_name))
-                        .await?;
+                    loop {
+                        if let Some(reply_msg) = crate::utils::get_replied_message(&cx.update) {
+                            if let Some(target_user) = crate::utils::get_message_sender(reply_msg) {
+                                let target_user_name =
+                                    crate::utils::get_user_display_name(target_user);
+                                cx.answer(format!(
+                                    "{} 给 {} 倒了一杯奶茶！🧋",
+                                    user_name, target_user_name
+                                ))
+                                .await?;
+                                break;
+                            }
+                        }
+                        cx.answer(format!("给 {} 倒一杯奶茶！🧋", user_name))
+                            .await?;
+                        break;
+                    }
                 }
             }
         };
