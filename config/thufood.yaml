@@ -1,0 +1,71 @@
+canteens:
+  - name: 桃李园一层
+    weight: 100
+  - name: 桃李园二层
+    weight: 100
+  - name: 桃李园三层
+    weight: 1
+  - name: 清青休闲餐厅
+    weight: 10
+  - name: 紫荆园一层
+    weight: 100
+  - name: 紫荆园二层
+    weight: 100
+  - name: 紫荆园三层
+    weight: 100
+  - name: 紫荆园四层
+    weight: 100
+  - name: 清青披萨
+    weight: 10
+  - name: 清芬园一层
+    weight: 100
+  - name: 清芬园二层
+    weight: 100
+  - name: 清芬园三层
+    weight: 1
+  - name: 清青快餐
+    weight: 10
+  - name: 听涛园一层
+    weight: 100
+  - name: 清青牛拉
+    weight: 100
+  - name: 融园
+    weight: 1
+  - name: 丁香园一层
+    weight: 100
+  - name: 观畴园一层
+    weight: 100
+  - name: 观畴园二层
+    weight: 100
+  - name: 观畴园三层
+    weight: 1
+  - name: 清青永和
+    weight: 10
+  - name: 清真餐厅
+    weight: 10
+  - name: 北园
+    weight: 1
+  - name: 南园
+    weight: 100
+  - name: 澜园
+    weight: 1
+  - name: 家园
+    weight: 1
+  - name: 荷园
+    weight: 1
+  - name: 寓园
+    weight: 1
+  - name: 芝兰园
+    weight: 10
+  - name: 清青小火锅
+    weight: 10
+  - name: 玉树园
+    weight: 10
+  - name: 熙春园
+    weight: 1
+  - name: 近春园
+    weight: 1
+  - name: 甲所
+    weight: 1
+  - name: 双清食堂
+    weight: 1

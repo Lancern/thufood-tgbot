@@ -1,6 +1,8 @@
-FROM rust
+FROM ubuntu:focal
 
 WORKDIR /bot
-COPY . .
 
-ENTRYPOINT ["/bot/target/release/thufood-tgbot", "-c", "canteens.txt"]
+COPY /target/release/thufood-tgbot /bot/bin/
+COPY /config /bot/config
+
+ENTRYPOINT ["/bot/bin/thufood-tgbot", "-c", "/bot/config/thufood.toml"]
