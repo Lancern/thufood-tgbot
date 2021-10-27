@@ -14,6 +14,7 @@ use teloxide::utils::command::BotCommand;
 use teloxide::Bot;
 
 use crate::commands::canteen::CanteenCommandHandler;
+use crate::commands::drink::DrinkCommandHandler;
 use crate::commands::help::HelpCommandHandler;
 use crate::config::Config;
 
@@ -41,6 +42,7 @@ impl CommandRepl {
         let factories = [
             create_command_handler::<CanteenCommandHandler>,
             create_command_handler::<HelpCommandHandler>,
+            create_command_handler::<DrinkCommandHandler>,
         ];
         for f in factories {
             let handler = f(config)?;
@@ -104,6 +106,9 @@ enum Command {
 
     #[command(description = "线上生产饮品")]
     ProduceDrink { drink_name: String },
+
+    #[command(description = "投喂猫咪")]
+    FeedMeow,
 }
 
 lazy_static! {
@@ -131,6 +136,10 @@ lazy_static! {
         BotCommandDescriptor {
             command: String::from("producedrink"),
             description: String::from("线上生产饮品"),
+        },
+        BotCommandDescriptor {
+            command: String::from("feedmeow"),
+            description: String::from("投喂猫咪"),
         }
     ];
 }
