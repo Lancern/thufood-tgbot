@@ -89,7 +89,7 @@ where
     let file_content = match std::fs::read_to_string(config_path) {
         Ok(content) => content,
         Err(e) => {
-            eprintln!("Failed to read config file: {}", e);
+            log::error!("Failed to read config file: {}", e);
             std::process::exit(1);
         }
     };
@@ -97,7 +97,7 @@ where
     match serde_yaml::from_str(&file_content) {
         Ok(config) => config,
         Err(e) => {
-            eprintln!("Failed to parse config file: {}", e);
+            log::error!("Failed to parse config file: {}", e);
             std::process::exit(1);
         }
     }

@@ -69,3 +69,4 @@ canteens:
     weight: 1
   - name: 双清食堂
     weight: 1
+meow_counter_file: meow

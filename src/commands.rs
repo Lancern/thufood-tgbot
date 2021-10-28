@@ -1,6 +1,7 @@
 mod canteen;
 mod drink;
 mod help;
+mod meow;
 
 use std::error::Error;
 use std::sync::Arc;
@@ -16,6 +17,7 @@ use teloxide::Bot;
 use crate::commands::canteen::CanteenCommandHandler;
 use crate::commands::drink::DrinkCommandHandler;
 use crate::commands::help::HelpCommandHandler;
+use crate::commands::meow::MeowCommandHandler;
 use crate::config::Config;
 
 /// A command REPL bot that serves the thufood bot commands in a REPL.
@@ -41,8 +43,9 @@ impl CommandRepl {
 
         let factories = [
             create_command_handler::<CanteenCommandHandler>,
-            create_command_handler::<HelpCommandHandler>,
             create_command_handler::<DrinkCommandHandler>,
+            create_command_handler::<HelpCommandHandler>,
+            create_command_handler::<MeowCommandHandler>,
         ];
         for f in factories {
             let handler = f(config)?;
@@ -109,6 +112,9 @@ enum Command {
 
     #[command(description = "投喂猫咪")]
     FeedMeow,
+
+    #[command(description = "使用 WD40 投喂猫咪")]
+    FeedMeowWd40,
 }
 
 lazy_static! {
@@ -140,6 +146,10 @@ lazy_static! {
         BotCommandDescriptor {
             command: String::from("feedmeow"),
             description: String::from("投喂猫咪"),
+        },
+        BotCommandDescriptor {
+            command: String::from("feedmeowwd40"),
+            description: String::from("使用 WD40 投喂猫咪"),
         }
     ];
 }
