@@ -27,8 +27,6 @@ async fn main() {
 }
 
 async fn run() {
-    pretty_env_logger::init();
-
     let args =
         clap::App::new("Telegram bot providing canteen recommendations in Tsinghua University")
             .version("0.1.0")
