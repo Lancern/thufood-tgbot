@@ -42,7 +42,7 @@ impl CommandHandler for Twd2CommandHandler {
     ) -> Result<(), Box<dyn Error + Send + Sync>> {
         let counter = self.service.increase();
         let msg = match cmd {
-            Command::FeedMeow => {
+            Command::FeedTwd2 => {
                 format!("二老师投喂计数器：{}\n向二老师投喂酥酥万呆粒一枚~", counter)
             }
             _ => unreachable!(),
