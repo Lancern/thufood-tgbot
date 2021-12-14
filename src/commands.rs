@@ -19,6 +19,7 @@ use crate::commands::canteen::CanteenCommandHandler;
 use crate::commands::drink::DrinkCommandHandler;
 use crate::commands::help::HelpCommandHandler;
 use crate::commands::meow::MeowCommandHandler;
+use crate::commands::twd2::Twd2CommandHandler;
 use crate::config::Config;
 
 /// A command REPL bot that serves the thufood bot commands in a REPL.
@@ -47,6 +48,7 @@ impl CommandRepl {
             create_command_handler::<DrinkCommandHandler>,
             create_command_handler::<HelpCommandHandler>,
             create_command_handler::<MeowCommandHandler>,
+            create_command_handler::<Twd2CommandHandler>,
         ];
         for f in factories {
             let handler = f(config)?;
