@@ -12,6 +12,7 @@ extern crate tokio;
 
 mod commands;
 mod config;
+mod services;
 mod utils;
 
 use std::path::{Path, PathBuf};

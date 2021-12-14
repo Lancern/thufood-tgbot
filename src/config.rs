@@ -10,6 +10,9 @@ pub struct Config {
 
     /// Path to the backing file of the meow counter.
     pub meow_counter_file: PathBuf,
+
+    /// Path to the backing file of the twd2 counter.
+    pub twd2_counter_file: PathBuf,
 }
 
 /// Information about a canteen.

@@ -70,3 +70,4 @@ canteens:
   - name: 双清食堂
     weight: 1
 meow_counter_file: meow
+twd2_counter_file: twd2

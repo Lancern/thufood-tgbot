@@ -2,6 +2,7 @@ mod canteen;
 mod drink;
 mod help;
 mod meow;
+mod twd2;
 
 use std::error::Error;
 use std::sync::Arc;
@@ -115,6 +116,9 @@ enum Command {
 
     #[command(description = "使用 WD40 投喂猫咪")]
     FeedMeowWd40,
+
+    #[command(description = "使用酥酥万呆粒投喂二老师")]
+    FeedTwd2,
 }
 
 lazy_static! {
@@ -150,6 +154,10 @@ lazy_static! {
         BotCommandDescriptor {
             command: String::from("feedmeowwd40"),
             description: String::from("使用 WD40 投喂猫咪"),
+        },
+        BotCommandDescriptor {
+            command: String::from("feedtwd2"),
+            description: String::from("使用酥酥万呆粒投喂二老师"),
         }
     ];
 }
