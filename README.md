@@ -36,7 +36,7 @@ allocate a new token, talk to `BotFather`.
 `$NAME` should be set to the Telegram bot name.
 
 The `-c` command line option gives the path to a text file that contains the
-configution. The [`thufood.yaml`](config/thufood.yaml) file gives an example and
+configuration. The [`thufood.yaml`](config/thufood.yaml) file gives an example and
 the default configuration.
 
 > TODO: more documentation on the configuration schema is needed.
